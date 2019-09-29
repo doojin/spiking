@@ -1,8 +1,12 @@
-const { Worker } = require('worker_threads');
+const WorkerUnit = require('./worker-unit');
 
-const worker = new Worker('./worker.js');
-worker.postMessage('111');
-worker.on('message', message => {
-    console.log(`Parent thread received from worker: ${message}`);
-    setTimeout(() => worker.postMessage('111'), 3000);
-});
+let taskId = 1;
+
+const worker = new WorkerUnit('./worker.js');
+
+async function startLoop() {
+    await worker.process(taskId++);
+    startLoop();
+}
+
+startLoop();

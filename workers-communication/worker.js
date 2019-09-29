@@ -1,6 +1,10 @@
-const { parentPort } = require('worker_threads');
+const workerApi = require('./worker-api');
 
-parentPort.on('message', message => {
-    console.log(`Worker received from parent: ${message}`);
-    setTimeout(() => parentPort.postMessage('222'), 3000);
+workerApi.process(taskId => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            console.log(`Task ${taskId} processed`);
+            resolve();
+        }, 2000);
+    });
 });
